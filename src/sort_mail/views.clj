@@ -11,5 +11,6 @@
      [:h1 "sort-mail"]
      [:button {:type "button" :onclick "capture.take();"} [:h2 "sort"]]
      [:br]
-     [:canvas {:style "width: 100%;" :height "128x"}]
-     [:video {:onplaying "capture.init();"}]]))
+     [:div {:style "width: 50%; margin-left: auto; margin-right: auto"}
+      [:canvas {:style "width: 100%;" :height "128x"}]
+      [:video {:onplaying "capture.init();"}]]]))
