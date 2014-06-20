@@ -1,12 +1,17 @@
 (ns sort-mail.views
   (:use [hiccup core page]))
 
+(defn my-include-js
+  [& files]
+  (let [full-paths (map #(str "/js/" %) files)]
+    (apply include-js full-paths)))
+
 (defn index-page []
   (html5
     [:head
      [:title "sort-mail"]
      (include-css "/css/style.css")
-     (include-js "/js/webcam.js" "/js/capture.js")]
+     (my-include-js "jquery-2.1.1.min.js" "webcam.js" "capture.js")]
     [:body {:onload "webcam.init();"}
      [:h1 "sort-mail"]
      [:button {:type "button" :onclick "capture.take();"} [:h2 "sort"]]
