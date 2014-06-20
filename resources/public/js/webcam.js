@@ -1,5 +1,5 @@
 webcam = {
-    init: function() {
+    init: function(callback) {
         navigator.getUserMedia = (navigator.getUserMedia ||
                 navigator.webkitGetUserMedia ||
                 navigator.mozGetUserMedia ||
@@ -17,6 +17,9 @@ webcam = {
 
                         console.log("webcam initialized.");
                         video.play();
+
+                        if(callback !== undefined)
+                            callback();
                     },
 
                     // errorCallback

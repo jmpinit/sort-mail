@@ -6,7 +6,10 @@
     [:head
      [:title "sort-mail"]
      (include-css "/css/style.css")
-     (include-js "/js/webcam.js")]
-    [:body {:onload "webcam.init()"}
+     (include-js "/js/webcam.js" "/js/capture.js")]
+    [:body {:onload "webcam.init();"}
      [:h1 "sort-mail"]
-     [:video]]))
+     [:button {:type "button"} [:h2 "sort"]]
+     [:br]
+     [:canvas {:width "64px" :height "64px"}]
+     [:video {:onplaying "capture.init();"}]]))
