@@ -25,6 +25,7 @@ webcam = {
                     // errorCallback
                     function(err) {
                         console.log("The following error occured: " + err);
+                        alert(err);
                     }
             );
         } else {
