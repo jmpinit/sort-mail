@@ -1,1 +1,7 @@
 user-data
+
+# ocr data
+*.txt
+
+# webcam images
+*.png
