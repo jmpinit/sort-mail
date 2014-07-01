@@ -1,6 +1,7 @@
 (ns sort-mail.handler
   (:import [java.awt.image BufferedImage])
   (:use compojure.core
+        [clojure.java.shell :only (sh)]
         sort-mail.views
         [hiccup.middleware :only (wrap-base-url)])
   (:require [compojure.route :as route]
@@ -28,10 +29,6 @@
   (let [[widthH widthL heightH heightL _] binary
         width (bit-or (bit-shift-left (bmask widthH) 8) (bmask widthL))
         height (bit-or (bit-shift-left (bmask heightH) 8) (bmask heightL))
-        _ (println)
-        _ (println widthH widthL)
-        _ (println heightH heightL)
-        _ (println width height)
         pixels (drop 4 (map bmask binary))
         pixels-rgb (partition 3 pixels)
         p-i (range (count pixels-rgb))
@@ -66,7 +63,8 @@
                   image-binary (b64/decode (.getBytes image-base64))
                   image (binary-to-image image-binary)]
               (do (save-image image "resources/public/label.png")
-                  "success")))
+                  (sh "tesseract" "resources/public/label.png" "resources/public/ocr")
+                  (:out (sh "cat" "resources/public/ocr.txt")))))
   (route/resources "/")
   (route/not-found "Page not found"))
 
