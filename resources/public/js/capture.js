@@ -1,24 +1,29 @@
 capture = {
     frame: {
-        x: 0, y: 0.9,
+        x: 0, y: 0.0,
         width: 1, height: 0.1
     },
 
-    canvas: null,
+    canvas_frame: null,
+    canvas_preview: null,
     video: null,
 
     init: function() {
-        capture.canvas = document.querySelector("canvas");
+        capture.canvas_frame = document.getElementById("frame");
+        capture.canvas_preview = document.getElementById("preview");
         capture.video = document.querySelector("video");
 
-        capture.canvas.width = capture.video.videoWidth;
-        capture.canvas.height = capture.video.videoHeight * 0.1;
+        capture.canvas_frame.width = capture.video.videoWidth;
+        capture.canvas_frame.height = capture.video.videoHeight * 0.1;
 
-        console.log("canvas sized.");
+        capture.canvas_preview.width = capture.canvas_frame.width;
+        capture.canvas_preview.height = capture.canvas_frame.height;
+
+        console.log("canvas_frame sized.");
     },
 
     take: function() {
-        var ctx = capture.canvas.getContext("2d");
+        var ctx = capture.canvas_frame.getContext("2d");
 
         var src = {
            x: capture.video.videoWidth * capture.frame.x,
@@ -30,28 +35,26 @@ capture = {
         var dest = {
             x: 0,
             y: 0,
-            width: capture.canvas.width,
-            height: capture.canvas.height
+            width: capture.canvas_frame.width,
+            height: capture.canvas_frame.height
         }
 
         ctx.drawImage(capture.video, src.x, src.y, src.width, src.height, dest.x, dest.y, dest.width, dest.height);
     },
 
     send: function() {
-        function canvasToBinary(canvas) {
-            var ctx = canvas.getContext('2d');
+        function canvasToBinary(canvas_frame) {
+            var ctx = canvas_frame.getContext('2d');
 
-            var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-            var binaryData = new Uint8Array(new ArrayBuffer(4 + canvas.width*canvas.height*3));
+            var imageData = ctx.getImageData(0, 0, canvas_frame.width, canvas_frame.height).data;
+            var binaryData = new Uint8Array(new ArrayBuffer(4 + canvas_frame.width*canvas_frame.height*3));
 
             // metadata
-            binaryData[0] = capture.canvas.width >> 8;
-            binaryData[1] = capture.canvas.width;
+            binaryData[0] = capture.canvas_frame.width >> 8;
+            binaryData[1] = capture.canvas_frame.width;
 
-            binaryData[2] = capture.canvas.height >> 8;
-            binaryData[3] = capture.canvas.height;
-
-            alert(binaryData[0] + ", " + binaryData[1] + ", " + binaryData[2] + ", " + binaryData[3]);
+            binaryData[2] = capture.canvas_frame.height >> 8;
+            binaryData[3] = capture.canvas_frame.height;
 
             var pixelIndex = 4;
 
@@ -68,7 +71,7 @@ capture = {
             return binaryData;
         }
 
-        var bin = canvasToBinary(capture.canvas)
+        var bin = canvasToBinary(capture.canvas_frame)
         var data = btoa(String.fromCharCode.apply(null, bin));
 
         $.ajax({
@@ -76,7 +79,7 @@ capture = {
             url: "ocr",
             data: "image=" + data,
             success: function(data) {
-                alert("reply! " + data);
+                console.log("reply! " + data);
             }
         });
     }

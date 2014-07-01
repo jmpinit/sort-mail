@@ -17,5 +17,6 @@
      [:button {:type "button" :onclick "(function() { capture.take(); capture.send(); })()"} [:h2 "sort"]]
      [:br]
      [:div {:style "width: 50%; margin-left: auto; margin-right: auto"}
-      [:canvas {:style "width: 100%;" :height "128x"}]
-      [:video {:onplaying "capture.init();"}]]]))
+      [:canvas#frame {:style "width: 100%;" :height "128x"}]
+      [:canvas#preview {:style "width: 100%;" :height "128x"}]
+      [:video {:onplaying "capture.init(); webcam.preview()"}]]]))
